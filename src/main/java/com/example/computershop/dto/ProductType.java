@@ -1,8 +1,8 @@
 package com.example.computershop.dto;
 
 public enum ProductType {
-    HARD_DISK,
+    HDD,
     LAPTOP,
     MONITOR,
-    NOTEBOOK
+    DESKTOP_COMPUTER
 }

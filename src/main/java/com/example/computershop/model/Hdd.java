@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 
@@ -13,15 +14,16 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-public class Monitor extends BaseComputerPart {
+@ToString
+public class Hdd extends BaseComputerPart {
 
     @Min(0)
     @NotNull
-    private Double diagonal;
+    private Integer capacity;
 
-    public Monitor(Integer id, String serialNumber, BigDecimal price, Integer quantityOnStock, Producer producer,
-                   Double diagonal) {
+    public Hdd(Integer id, String serialNumber, BigDecimal price, Integer quantityOnStock, Producer producer,
+               Integer capacity) {
         super(id, serialNumber, price, quantityOnStock, producer);
-        this.diagonal = diagonal;
+        this.capacity = capacity;
     }
 }

@@ -1,6 +1,6 @@
 package com.example.computershop.model.enums;
 
-public enum LaptopFormFactor {
+public enum DesktopComputerFormFactor {
     DESKTOP,
     NETTOP,
     MONOBLOCK
