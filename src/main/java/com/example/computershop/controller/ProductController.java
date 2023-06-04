@@ -2,101 +2,76 @@ package com.example.computershop.controller;
 
 import com.example.computershop.dto.ComputerPartDto;
 import com.example.computershop.dto.ProductType;
-import com.example.computershop.error.NotFoundException;
-import com.example.computershop.model.*;
-import com.example.computershop.repository.*;
+import com.example.computershop.service.ProductService;
+import com.example.computershop.util.ValidationUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
 
-import static com.example.computershop.dto.DtoUtil.*;
-import static com.example.computershop.dto.ProductType.DESKTOP_COMPUTER;
+import static com.example.computershop.util.OpenApiUtil.*;
 
 @RestController
-@RequestMapping(value = "/products", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = ProductController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProductController {
 
-    @Autowired
-    private HddRepository hddRepository;
+    public static final String REST_URL = "/products";
 
     @Autowired
-    private DesktopComputerRepository desktopComputerRepository;
+    private ProductService productService;
 
-    @Autowired
-    private MonitorRepository monitorRepository;
-
-    @Autowired
-    private LaptopRepository laptopRepository;
-
-    @Autowired
-    private ProducerRepository producerRepository;
-
-    @Autowired
-    private BaseComputerPartRepository baseComputerPartRepository;
-
+    @Operation(requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = PRODUCT_REQUEST_BODY_CREATE_DESCRIPTION,
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    examples = @ExampleObject(value = PRODUCT_REQUEST_BODY_CREATE_EXAMPLE)
+            )
+    ))
     @PostMapping
     public ResponseEntity<ComputerPartDto> create(@Valid @RequestBody ComputerPartDto computerPartDto) {
-        Assert.isNull(computerPartDto.getId(), "id must be null");
-        Producer producer = producerRepository.getReferenceById(computerPartDto.getProducerId().longValue());
-        BaseComputerPart baseComputerPart = save(computerPartDto, producer);
-        computerPartDto.setId(baseComputerPart.getId());
+        ValidationUtil.checkNew(computerPartDto);
+        ComputerPartDto created = productService.create(computerPartDto);
         URI uriOfCreatedResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/{id}").buildAndExpand(computerPartDto.getId()).toUri();
-        return ResponseEntity.created(uriOfCreatedResource).body(computerPartDto);
+                .path("/{id}").buildAndExpand(created.getId()).toUri();
+        return ResponseEntity.created(uriOfCreatedResource).body(created);
     }
 
     @GetMapping("/{id}")
-    public ComputerPartDto get(@PathVariable Long id) {
-        BaseComputerPart baseComputerPart = baseComputerPartRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Product not found"));
-        Class<?> clazz = baseComputerPart.getClass();
-        ProductType productType = (clazz == DesktopComputer.class) ? DESKTOP_COMPUTER :
-                ProductType.valueOf(clazz.getSimpleName().toUpperCase());
-        return switch (productType) {
-            case DESKTOP_COMPUTER -> desktopComputerToComputerPartDto((DesktopComputer) baseComputerPart);
-            case MONITOR -> monitorToComputerPartDto((Monitor) baseComputerPart);
-            case LAPTOP -> laptopToComputerPartDto((Laptop) baseComputerPart);
-            case HDD -> hddToComputerPartDto((Hdd) baseComputerPart);
-            default -> throw new IllegalArgumentException("Such type does not exist");
-        };
+    public ComputerPartDto get(@PathVariable Integer id) {
+        return productService.get(id);
     }
 
     @GetMapping("/by-type")
     public List<ComputerPartDto> getAllByType(@RequestParam("type") ProductType productType) {
-        return switch (productType) {
-            case DESKTOP_COMPUTER -> desktopComputersToComputerPartDtos(desktopComputerRepository.findAll());
-            case MONITOR -> monitorsToComputerPartDtos(monitorRepository.findAll());
-            case LAPTOP -> laptopsToComputerPartDtos(laptopRepository.findAll());
-            case HDD -> hddsToComputerPartDtos(hddRepository.findAll());
-            default -> throw new IllegalArgumentException("Such type does not exist");
-        };
+        return productService.getAllByType(productType);
+    }
+
+    @Operation(requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = PRODUCT_REQUEST_BODY_CREATE_DESCRIPTION,
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    examples = @ExampleObject(value = PRODUCT_REQUEST_BODY_CREATE_EXAMPLE)
+            )
+    ))
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/{id}")
+    public void update(@Valid @RequestBody ComputerPartDto computerPartDto, @PathVariable Integer id) {
+        ValidationUtil.assureIdConsistent(computerPartDto, id);
+        productService.update(computerPartDto);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PutMapping
-    public void update(@Valid  @RequestBody ComputerPartDto computerPartDto) {
-        Assert.notNull(computerPartDto.getId(), "id must not be null");
-        Producer producer = producerRepository.getReferenceById(computerPartDto.getProducerId().longValue());
-        save(computerPartDto, producer);
-    }
-
-    private BaseComputerPart save(ComputerPartDto computerPartDto, Producer producer) {
-        ProductType productType = computerPartDto.getProductType();
-        return switch (productType) {
-            case DESKTOP_COMPUTER -> desktopComputerRepository.save(computerPartDtoToDesktopComputer(computerPartDto,
-                    producer));
-            case MONITOR -> monitorRepository.save(computerPartDtoToMonitor(computerPartDto, producer));
-            case LAPTOP -> laptopRepository.save(computerPartDtoToLaptop(computerPartDto, producer));
-            case HDD -> hddRepository.save(computerPartDtoToHdd(computerPartDto, producer));
-            default -> throw new IllegalArgumentException("Such type does not exist");
-        };
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Integer id) {
+        productService.delete(id);
     }
 }

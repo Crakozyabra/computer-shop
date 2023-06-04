@@ -1,5 +1,7 @@
-package com.example.computershop.dto;
+package com.example.computershop.util;
 
+import com.example.computershop.dto.ComputerPartDto;
+import com.example.computershop.dto.ProductType;
 import com.example.computershop.model.*;
 import lombok.experimental.UtilityClass;
 

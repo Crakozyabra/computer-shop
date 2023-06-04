@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 @Entity
 public class Laptop extends BaseComputerPart {
 
-    //@Convert(converter = LaptopSizeAttributeConverter.class)
     @Min(0)
     @NotNull
     private Integer laptopSize;
