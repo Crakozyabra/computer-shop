@@ -3,12 +3,12 @@ package com.example.computershop.controller;
 import com.example.computershop.dto.ComputerPartDto;
 import com.example.computershop.dto.ProductType;
 import com.example.computershop.service.ProductService;
-import com.example.computershop.util.ValidationUtil;
+import com.example.computershop.util.validation.ValidationUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,15 +18,16 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-import static com.example.computershop.util.OpenApiUtil.*;
+import static com.example.computershop.util.OpenApiUtil.PRODUCT_REQUEST_BODY_CREATE_DESCRIPTION;
+import static com.example.computershop.util.OpenApiUtil.PRODUCT_REQUEST_BODY_CREATE_EXAMPLE;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping(value = ProductController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProductController {
 
     public static final String REST_URL = "/products";
 
-    @Autowired
     private ProductService productService;
 
     @Operation(requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(

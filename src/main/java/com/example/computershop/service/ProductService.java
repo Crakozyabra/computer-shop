@@ -6,7 +6,7 @@ import com.example.computershop.error.DataConflictException;
 import com.example.computershop.error.NotFoundException;
 import com.example.computershop.model.*;
 import com.example.computershop.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,26 +15,21 @@ import java.util.List;
 import static com.example.computershop.dto.ProductType.DESKTOP_COMPUTER;
 import static com.example.computershop.util.DtoUtil.*;
 
+@AllArgsConstructor
 @Transactional(readOnly = true)
 @Service
 public class ProductService {
 
-    @Autowired
     private HddRepository hddRepository;
 
-    @Autowired
     private DesktopComputerRepository desktopComputerRepository;
 
-    @Autowired
     private MonitorRepository monitorRepository;
 
-    @Autowired
     private LaptopRepository laptopRepository;
 
-    @Autowired
     private ProducerRepository producerRepository;
 
-    @Autowired
     private BaseComputerPartRepository baseComputerPartRepository;
 
     @Transactional
@@ -47,7 +42,7 @@ public class ProductService {
             case MONITOR -> monitorRepository.save(computerPartDtoToMonitor(computerPartDto, producer));
             case LAPTOP -> laptopRepository.save(computerPartDtoToLaptop(computerPartDto, producer));
             case HDD -> hddRepository.save(computerPartDtoToHdd(computerPartDto, producer));
-            default -> throw new IllegalArgumentException("Such type does not exist");
+            default -> throw new IllegalArgumentException("Such type does not supports");
         };
         computerPartDto.setId(baseComputerPart.getId());
         computerPartDto.setProducerName(baseComputerPart.getProducer().getName());
@@ -63,7 +58,7 @@ public class ProductService {
             case MONITOR -> monitorToComputerPartDto((Monitor) baseComputerPart);
             case LAPTOP -> laptopToComputerPartDto((Laptop) baseComputerPart);
             case HDD -> hddToComputerPartDto((Hdd) baseComputerPart);
-            default -> throw new IllegalArgumentException("Such type does not exist");
+            default -> throw new IllegalArgumentException("Such type does not supports");
         };
     }
 
@@ -73,7 +68,7 @@ public class ProductService {
             case MONITOR -> monitorsToComputerPartDtos(monitorRepository.findAll());
             case LAPTOP -> laptopsToComputerPartDtos(laptopRepository.findAll());
             case HDD -> hddsToComputerPartDtos(hddRepository.findAll());
-            default -> throw new IllegalArgumentException("Such type does not exist");
+            default -> throw new IllegalArgumentException("Such type does not supports");
         };
     }
 
@@ -112,7 +107,7 @@ public class ProductService {
                 hdd.setCapacity(computerPartDto.getHddCapacity());
                 hddRepository.save(hdd);
             }
-            default -> throw new IllegalArgumentException("Such type does not exist");
+            default -> throw new IllegalArgumentException("Such type does not supports");
         }
     }
 

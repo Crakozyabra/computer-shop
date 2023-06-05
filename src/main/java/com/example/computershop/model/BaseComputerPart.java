@@ -1,14 +1,15 @@
 package com.example.computershop.model;
 
+import com.example.computershop.HasId;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -16,6 +17,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.math.BigDecimal;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -23,8 +25,7 @@ import java.math.BigDecimal;
         columnNames = {"serial_number", "producer_id"}))
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorValue("Base")
-@ToString
-public class BaseComputerPart {
+public class BaseComputerPart implements HasId {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,15 +50,6 @@ public class BaseComputerPart {
     @ManyToOne
     @JoinColumn(name = "producer_id")
     private Producer producer;
-
-    public BaseComputerPart(Integer id, String serialNumber, BigDecimal price, Integer quantityOnStock,
-                            Producer producer) {
-        this.id = id;
-        this.serialNumber = serialNumber;
-        this.price = price;
-        this.quantityOnStock = quantityOnStock;
-        this.producer = producer;
-    }
 
     @Override
     public boolean equals(Object o) {

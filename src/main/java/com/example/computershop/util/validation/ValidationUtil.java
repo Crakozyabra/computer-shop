@@ -1,4 +1,4 @@
-package com.example.computershop.util;
+package com.example.computershop.util.validation;
 
 import com.example.computershop.HasId;
 import com.example.computershop.error.IllegalRequestDataException;

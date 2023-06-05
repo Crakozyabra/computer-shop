@@ -8,7 +8,7 @@ public class OpenApiUtil {
     public final static String PRODUCT_REQUEST_BODY_CREATE_DESCRIPTION = """
             Варианты свойств:
             - "productType": "HDD" c "hddCapacity": ?
-            - "productType": "LAPTOP" c "laptopSize": ?
+            - "productType": "LAPTOP" c "laptopSize": 13 или 14 или 15 или 17
             - "productType": "DESKTOP_COMPUTER" с "desktopComputerFormFactor": "DESKTOP" или "NETTOP" или "MONOBLOCK"
             - "productType": "MONITOR" c "monitorDiagonal": ?,
             где ? - число 

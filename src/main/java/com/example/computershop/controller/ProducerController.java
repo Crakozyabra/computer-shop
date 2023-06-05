@@ -4,9 +4,9 @@ import com.example.computershop.dto.ProducerDto;
 import com.example.computershop.error.NotFoundException;
 import com.example.computershop.model.Producer;
 import com.example.computershop.repository.ProducerRepository;
-import com.example.computershop.util.ValidationUtil;
+import com.example.computershop.util.validation.ValidationUtil;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +18,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping(value = ProducerController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProducerController {
 
     public static final String REST_URL = "/producers";
 
-    @Autowired
     private ProducerRepository producerRepository;
 
     @PostMapping

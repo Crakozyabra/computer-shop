@@ -1,7 +1,6 @@
 package com.example.computershop.config;
 
 import com.example.computershop.error.*;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ValidationException;
