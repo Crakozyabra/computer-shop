@@ -44,7 +44,8 @@
 
 1. Открыть Intelj idea. Если открыт проект, закрыть (File -> Close Project)
 2. В появившемся окне нажать кнопку "Get from VCS"
-3. В появившемся окне выбрать систему контроля версий "Git", указать URL и директорию для распаковки и нажать кнопку "Clone"
+3. В появившемся окне выбрать систему контроля версий "Git", указать URL https://github.com/Crakozyabra/computer-shop и
+директорию для распаковки и нажать кнопку "Clone"
 4. В открывшемся проекте нажать зеленую стрелочку или комбинацию клавиш Shift + F10
 5. Можно тектировать REST API через Swagger UI в браузере по URL http://localhost:8080/swagger-ui/index.html
 
@@ -52,8 +53,8 @@
 
 1. Перейти в консоли в папку в которой будет находиться проект (например командой cd)
 2. Выполнить в консоли: git clone https://github.com/Crakozyabra/computer-shop
-3. Выполнить в консоли: mvn clean package
-4. Выполнить в консоли: java -jar target/*.jar
+3. Выполнить в консоли: cd ./computer-shop
+4. Выполнить в консоли: mvn spring-boot:run
 5. Можно тестировать REST API через Swagger UI в браузере по URL http://localhost:8080/swagger-ui/index.html
 
 ### Примечания:
